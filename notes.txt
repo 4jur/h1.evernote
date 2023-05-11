@@ -2,3 +2,27 @@
 
 # URL after registration w/kblenkhorn@proton.me
 https://www.evernote.com/client/web?login=true&newReg=true#?n=bbebbf5c-905c-54ab-eaad-c3bec9b9a36f&
+
+5/8/2023
+---------
+PROBLEM: QUIC (UDP 443) does not get captured by burpsuite.
+[ ] Try blocking UDP 443 to force the server to use TCP only.
+    sudo iptables -I INPUT -p udp  --dport 443 -j DROP
+
+
+5/9/2023
+--------
+ * Parsing http2 has been a challenge. Python does not seem to fully support it yet.
+   I was able to set up 'tw' as a simple HTTP2 server for a demo:
+   
+pip install 
+
+openssl genrsa > privkey.pem
+kali@kali:~/repo/h1.evernote$ openssl req -new -x509 -key privkey.pem -out cert.pem -days 365 -nodes
+
+
+
+(1) sudo tcpdump -i any port 8080 -XX
+(2) curl -k --http2 https://127.0.0.1:8080
+(3) burpsuite browser https://127.0.0.1:8080/
+

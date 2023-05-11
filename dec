@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+
+from http.server import BaseHTTPRequestHandler
+from io import BytesIO
+
+class HTTPRequest(BaseHTTPRequestHandler):
+    def __init__(self, request_text):
+        self.rfile = BytesIO(request_text)
+        self.raw_requestline = self.rfile.readline()
+        print(self.raw_requestline, type(self.raw_requestline))
+        self.error_code = self.error_message = None
+        self.parse_request()
+
+    def send_error(self, code, message):
+        self.error_code = code
+        self.error_message = message
+        
+        
+req1 = b'GET /js/vendors.7582b855e5fb7a041eeb.js HTTP/2.1\r\nHost: evernote.com\r\nCookie: web50017PreUserGuid=5946cbd8-a921-47e7-b6d7-c2b4b304fe3e; optimizelyEndUserId=oeu1683494520787r0.13130921008290808; ActionHasBeenTakenOnSite=129600000000; _gcl_au=1.1.516767036.1683494522; mktsku=var-1; _ga=GA1.2.932898516.1683494522; _gid=GA1.2.1632414015.1683494522; _fbp=fb.1.1683494522338.1723578443; __qca=P0-1470418849-1683494522248; _hjSessionUser_605273=eyJpZCI6IjVmNzU1OTgxLTU3YjEtNThmMy1iYWFhLTkwYmU5YTI0YzhiNiIsImNyZWF0ZWQiOjE2ODM0OTQ1MjI1MjgsImV4aXN0aW5nIjp0cnVlfQ==; _hjHasCachedUserAttributes=true; userdata_loggedIn=true; userdata_lastLoginTime=1683499037240; userdata_accountType=FREE; userdata_acctCreatedTime=1683479995000; _uetsid=353c4920ed1d11edbb02477dafbe66a5; _uetvid=353e2180ed1d11ed8b5545388216c95e; mkv=var-3\r\nSec-Ch-Ua: "Chromium";v="107", "Not=A?Brand";v="24"\r\nSec-Ch-Ua-Mobile: ?0\r\nUser-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.5304.107 Safari/537.36\r\nSec-Ch-Ua-Platform: "Linux"\r\nAccept: */*\r\nSec-Fetch-Site: same-origin\r\nSec-Fetch-Mode: no-cors\r\nSec-Fetch-Dest: script\r\nReferer: https://evernote.com/\r\nAccept-Encoding: gzip, deflate\r\nAccept-Language: en-US,en;q=0.9\r\n\r\n'
+
+
+
+
+
+request = HTTPRequest(req1)
+print(request.error_code)     # 400
+print(request.error_message)  # "Bad request syntax ('GET')"
+

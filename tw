@@ -1,0 +1,53 @@
+#!/usr/bin/env python3
+
+### BEGIN PATCH ###
+# This fixes a problem caused by importing deprecated APIs.
+import collections.abc
+collections.Iterable = collections.abc.Iterable
+collections.Mapping = collections.abc.Mapping
+collections.MutableSet = collections.abc.MutableSet
+collections.MutableMapping = collections.abc.MutableMapping
+### END PATCH ###
+
+
+import sys
+
+from twisted.web import server
+from twisted.web.resource import Resource
+from twisted.internet import reactor
+from twisted.python import log
+
+from twisted.internet import endpoints
+
+class Index(Resource):
+    isLeaf = True
+
+    def getChild(self, name, request):
+        print("-Res:", name, request)
+        if name == '':
+            return self
+        return Resource.getChild(self, name, request)
+
+
+    def render_GET(self, request):
+        print (dir(self))
+        print (dir(request))
+        print (request.code)
+        print (request.cookies)
+        print (request.getAllHeaders())
+        print (request.content)
+        print (request.prepath)
+        print (request.sitepath)
+        print (request.prePathURL())
+        return b"hello world (in HTTP2)"
+
+
+if __name__ == "__main__":
+    log.startLogging(sys.stdout)
+    site = server.Site(Index())
+#    endpoint_spec = "ssl:port=8080:privateKey=privkey.pem:certKey=cert.pem"
+    endpoint_spec = "tcp:port=8080"
+    server = endpoints.serverFromString(reactor, endpoint_spec)
+    server.listen(site)
+    reactor.run()
+    
